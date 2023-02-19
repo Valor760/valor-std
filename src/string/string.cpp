@@ -4,6 +4,7 @@
 
 
 namespace vlr {
+	// std::string doesn't have a constructor for char, so only str-str overload
 	string& string::replace(const std::string& what, const std::string& with, const size_t& n) {
 		if(n < 1) {
 			throw std::runtime_error("Number of replacements (n) cannot be less than 1!");
@@ -17,17 +18,12 @@ namespace vlr {
 
 			std::string::replace(pos, what.length(), with);
 			count++;
+			pos += with.length();
 		}
 		return *this;
 	}
 
-	string& string::replace(const char& what, const std::string& with, const size_t& n) {
-		return replace(std::string(&what), with, n);
-	}
-	string& string::replace(const std::string& what, const char& with, const size_t& n) {
-		return replace(what, std::string(&with), n);
-	}
-	string& string::replace(const char& what, const char& with, const size_t& n) {
-		return replace(std::string(&what), std::string(&with), n);
+	string& string::getInstance() {
+		return *this;
 	}
 } // namespace vlr
