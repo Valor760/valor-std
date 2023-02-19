@@ -9,7 +9,6 @@ set(LIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(CMAKE_BUILD_TYPE "")
 
 # Check for library type [STATIC | SHARED]
-set(LIB_TYPE STATIC)
 if(NOT DEFINED LIB_TYPE)
 	message("LIB_TYPE variable is not defined. Setting STATIC by default")
 	# If library type is not defined, then set static by default
