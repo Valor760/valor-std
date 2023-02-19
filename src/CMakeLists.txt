@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(${TARGET})
+
+file(GLOB_RECURSE SRC ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+file(GLOB_RECURSE HEADER ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+
+add_library(${TARGET} ${LIB_TYPE} ${SRC} ${HEADER})
