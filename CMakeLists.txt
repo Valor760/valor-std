@@ -4,7 +4,8 @@ set(TARGET valor-std)
 project(${TARGET})
 
 # Global vars
-set(OUTPUT_LIB_DIR $<1:${CMAKE_CURRENT_SOURCE_DIR}/lib>) # $<1:> to remove Debug/Release subdirs
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+set(OUTPUT_LIB_DIR $<1:${LIB_DIR}>) # $<1:> to remove Debug/Release subdirs
 set(LIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(CMAKE_BUILD_TYPE "")
 
@@ -22,9 +23,9 @@ endif()
 
 # Set flags according to the OS
 if(WIN32)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++20")
 elseif(UNIX AND NOT APPLE)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++2a")
 else()
 	message(FATAL_ERROR "Current OS is not supported!")
 endif()
@@ -46,3 +47,4 @@ else()
 endif()
 
 add_subdirectory(src)
+add_subdirectory(tests)
