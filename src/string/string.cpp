@@ -1,6 +1,7 @@
 #include "string.h"
 
 #include <stdexcept>
+#include <algorithm>
 
 
 namespace vlr {
@@ -23,7 +24,26 @@ namespace vlr {
 		return *this;
 	}
 
-	string& string::getInstance() {
+	string* string::getInstance() {
+		return this;
+	}
+
+	string& string::to_lower() {
+		std::transform(this->begin(), this->end(), this->begin(), [](unsigned char c) { return tolower(c); } );
 		return *this;
+	}
+
+	bool string::contains(const std::string& str) {
+		if(this->find(str) == this->npos) {
+			return false;
+		}
+		return true;
+	}
+
+	bool string::contains(const char& ch) {
+		if(this->find(ch) == this->npos) {
+			return false;
+		}
+		return true;
 	}
 } // namespace vlr

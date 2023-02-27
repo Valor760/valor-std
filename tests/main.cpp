@@ -14,7 +14,7 @@
 
 // FIXME: Make better unit tests
 void test_string_replace() {
-	const std::string fmt = "%s:%d - expected[%s], but received[%s]\n";
+	const vlr::string fmt = "%s:%d - expected[%s], but received[%s]\n";
 	vlr::string expected, changed;
 
 	// Test #1
@@ -43,9 +43,70 @@ void test_string_replace() {
 	ASSERT(expected == changed.replace("s", "m", 3), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
 }
 
+void test_string_to_lower() {
+	const vlr::string fmt = "%s:%d - expected[%s], but received[%s]\n";
+	vlr::string expected, changed;
+
+	// Test #1
+	expected = "";
+	changed = "";
+	ASSERT(expected == changed.to_lower(), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+
+	// Test #2
+	expected = "some string";
+	changed = "SOME STRING";
+	ASSERT(expected == changed.to_lower(), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+
+	// Test #3
+	expected = "some str1 w1th num63r5";
+	changed = "SOME STR1 W1TH NUM63R5";
+	ASSERT(expected == changed.to_lower(), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+
+	// Test #4
+	expected = "some str1 w num63r5 and !!!";
+	changed = "SomE STr1 w NuM63R5 aNd !!!";
+	ASSERT(expected == changed.to_lower(), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+}
+
+void test_string_contains() {
+	const vlr::string fmt = "%s:%d - expected[%s], but received[%s]\n";
+	vlr::string expected, changed;
+
+	// Test #1
+	expected = "";
+	changed = "";
+	ASSERT(changed.contains(expected), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+
+	// Test #2
+	expected = "ooo";
+	changed = "Some Looong String";
+	ASSERT(changed.contains(expected), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+
+	// Test #3
+	expected = "Short";
+	changed = "Some Looong String";
+	ASSERT(!changed.contains(expected), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+
+	// Test #4
+	expected = "sOMe";
+	changed = "Some Looong String";
+	ASSERT(!changed.contains(expected), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+
+	// Test #4
+	changed = "Some Looong String";
+	ASSERT(changed.contains('r'), fmt.c_str(), _FUNLINE_, expected.c_str(), changed.c_str());
+}
+
 
 int main() {
-	test_string_replace();
+	try {
+		test_string_replace();
+		test_string_to_lower();
+	} catch(std::exception e) {
+		std::cout << "ERROR: Test Failed:\n" << e.what() << "\n";
+		return 1;
+	}
 
+	std::cout << "Test executed successfully!\n";
 	return 0;
 }
