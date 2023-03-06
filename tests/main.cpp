@@ -1,4 +1,5 @@
 #include "../src/string/string.h"
+#include "../src/fstream/fstream.h"
 
 #include <iostream>
 #include <assert.h>
@@ -106,6 +107,8 @@ int main() {
 		std::cout << "ERROR: Test Failed:\n" << e.what() << "\n";
 		return 1;
 	}
+
+	// vlr::fstream qwe("qwe.txt");
 
 	std::cout << "Test executed successfully!\n";
 	return 0;
