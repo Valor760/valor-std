@@ -14,56 +14,58 @@ void trim_str(std::string& str, const std::string& chars_to_remove = " \n\r\t") 
 	str.erase(str.find_last_not_of(chars_to_remove) + 1);
 }
 
-std::vector<std::string> split_attributes(std::string str) {
-	std::vector<std::string> token_buff = {};
-	size_t pos = 0;
-	std::string token = "";
+std::unordered_map<std::string, std::string> split_attributes(std::string str) {
+	std::unordered_map<std::string, std::string> attribute_map = {};
 
-	while(pos < str.length()) {
+	for(size_t pos = 0; pos < str.length(); pos++) {
+		size_t eq_sign_pos = str.find('=', pos);
 
-	}
-
-	// while((pos = str.find(delimiter)) != std::string::npos) {
-	// 	token = str.substr(0, pos);
-
-	// 	if(!token.empty()) {
-	// 		token_buff.push_back(token);
-	// 	}
-	// 	str.erase(0, pos + delimiter.length());
-	// }
-	if(!str.empty()) {
-		token_buff.push_back(str);
-	}
-
-	return token_buff;
-}
-
-std::unordered_map<std::string, std::string> parse_attributes(std::string str) {
-	std::unordered_map<std::string, std::string> attributes = {};
-
-	auto split_tokens = split_str(str, "=");
-	if(split_tokens.size() % 2 != 0) {
-		throw std::runtime_error("ERROR: Wrong number of attributes(should be even)");
-	}
-
-	for(int i = 0; i < split_tokens.size(); i += 2) {
-		std::string key = split_tokens[i];
-		std::string value = split_tokens[i + 1];
-
-		if(attributes.contains(key)) {
-			throw std::runtime_error("ERROR: Attribute " + key + " already present in tag!");
+		if(eq_sign_pos == std::string::npos) {
+			// throw std::runtime_error("ERROR: No '=' found and string hasn't ended!");
+			break;
 		}
 
-		trim_str(key);
-		// Double trim value. First to remove any spaces, then to remove ""
-		trim_str(value);
-		trim_str(value, "\"");
+		std::string attr = str.substr(pos, eq_sign_pos - pos - 1);
+		trim_str(attr);
 
-		attributes[key] = value;
+		size_t value_start_pos = str.find('\"', eq_sign_pos);
+		size_t value_end_pos   = str.find('\"', value_start_pos + 1);
+		std::string value      = str.substr(value_start_pos, value_end_pos - value_start_pos - 1);
+		
+		attribute_map[attr] = value;
+
+		pos = value_end_pos;
 	}
 
-	return attributes;
+	return attribute_map;
 }
+
+// std::unordered_map<std::string, std::string> parse_attributes(std::string str) {
+// 	std::unordered_map<std::string, std::string> attributes = {};
+
+// 	auto split_tokens = split_str(str, "=");
+// 	if(split_tokens.size() % 2 != 0) {
+// 		throw std::runtime_error("ERROR: Wrong number of attributes(should be even)");
+// 	}
+
+// 	for(int i = 0; i < split_tokens.size(); i += 2) {
+// 		std::string key = split_tokens[i];
+// 		std::string value = split_tokens[i + 1];
+
+// 		if(attributes.contains(key)) {
+// 			throw std::runtime_error("ERROR: Attribute " + key + " already present in tag!");
+// 		}
+
+// 		trim_str(key);
+// 		// Double trim value. First to remove any spaces, then to remove ""
+// 		trim_str(value);
+// 		trim_str(value, "\"");
+
+// 		attributes[key] = value;
+// 	}
+
+// 	return attributes;
+// }
 
 XMLNode* XMLParser::getRoot() {
 	if(m_RootNode == nullptr) {

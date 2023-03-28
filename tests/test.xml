@@ -1,6 +1,6 @@
 <first>
 	<second qwe="attribute">
-		<third some="data" another  ="data2">
+		<third some="data" another  ="            data2            ">
 			Hello!
 		</third>
 		<fourth>
