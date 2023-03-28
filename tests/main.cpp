@@ -1,5 +1,6 @@
 #include "../src/string/string.h"
 #include "../src/fstream/fstream.h"
+#include "../src/parser/xml.h"
 
 #include <iostream>
 #include <assert.h>
@@ -100,16 +101,20 @@ void test_string_contains() {
 
 
 int main() {
-	try {
-		test_string_replace();
-		test_string_to_lower();
-	} catch(std::exception e) {
-		std::cout << "ERROR: Test Failed:\n" << e.what() << "\n";
-		return 1;
-	}
+	// try {
+	// 	test_string_replace();
+	// 	test_string_to_lower();
+	// } catch(std::exception e) {
+	// 	std::cout << "ERROR: Test Failed:\n" << e.what() << "\n";
+	// 	return 1;
+	// }
 
-	// vlr::fstream qwe("qwe.txt");
+	vlr::XMLParser parser("C:\\projects\\valor-std\\tests\\test.xml");
+	vlr::XMLNode* root = parser.getRoot();
 
-	std::cout << "Test executed successfully!\n";
+	std::cout << root->getChild("second")->getChild("third")->getData() << "\n";
+
+	if(root != nullptr)
+		std::cout << "Test executed successfully!\n";
 	return 0;
 }

@@ -1,0 +1,12 @@
+<first>
+	<second qwe="attribute">
+		<third some="data" another  ="data2">
+			Hello!
+		</third>
+		<fourth>
+			World!
+			Second line
+			third line
+		</fourth>
+	</second>
+</first>

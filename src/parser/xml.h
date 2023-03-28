@@ -10,19 +10,29 @@ namespace vlr {
 
 // TODO: Move node class to cpp file as it is not required to be in public API
 class XMLNode {
+	public:
+		std::string getData();
+		XMLNode* getChild(const std::string& child_name);
+
+
 	private:
 		XMLNode(const std::string& name) : m_NodeName(name) {}
+		~XMLNode() {
+			for(auto child : m_Children) {
+				delete child;
+				child = nullptr;
+			}
+		}
 
-		void addChild(const XMLNode& child);
-		XMLNode& getChild(const std::string& child_name);
-		void addAttribute(const std::string& attribute, const std::string& value);
+		void addChild(XMLNode* child);
+		void addAttribute(const std::string& , const std::string& value);
 
 
 	private:
 		const std::string m_NodeName;
 		std::string m_Data = "";
-		std::vector<XMLNode> m_Children = {};
 		std::unordered_map<std::string, std::string> m_NodeAttributes = {};
+		std::vector<XMLNode*> m_Children = {};
 
 		friend class XMLParser;
 };
@@ -30,6 +40,10 @@ class XMLNode {
 class XMLParser {
 	public:
 		XMLParser(const std::string& filepath) : m_FilePath(filepath) {}
+		~XMLParser() {
+			delete m_RootNode;
+			m_RootNode = nullptr;
+		}
 
 		XMLNode* getRoot();
 
@@ -40,7 +54,7 @@ class XMLParser {
 
 	private:
 		const std::string m_FilePath;
-		std::unique_ptr<XMLNode> m_RootNode = nullptr;
+		XMLNode* m_RootNode = nullptr;
 };
 
 } // namespace vlr
