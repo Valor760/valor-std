@@ -143,27 +143,30 @@ void XMLParser::parseXML() {
 					std::string tag_str = line.substr(i, close_tag_pos - i);
 					// FIXME: Is it necessary to trim?
 					trim_str(tag_str);
-					// FIXME: It splits 'another="data 2"' into two parts. Need to handle carefully
-					auto tokens = split_str(tag_str, " ");
+					size_t node_name_end   = line.find_first_of(' ');
+					std::string node_name  = line.substr(i, node_name_end - i);
+					std::string attributes = line.substr(node_name_end, close_tag_pos - node_name_end);
+					trim_str(attributes);
 
 					// No tags for current node
-					if(!tokens.empty()) {
-						// First token is node name
-						XMLNode* node = new XMLNode(tokens[0]);
-						if(m_RootNode == nullptr) {
-							m_RootNode = node;
-							parsed_nodes.push_back(m_RootNode);
-						}
-						else {
-							parsed_nodes.back()->addChild(node);
-							parsed_nodes.push_back(node);
-						}
+					if(node_name.empty()) {
+						throw std::runtime_error("ERROR: No node name was found!");
+					}
 
-						for(int i = 1; i < tokens.size(); i++) {
-							auto attribute_map = parse_attributes(tokens[i]);
-							for(auto [key, val] : attribute_map) {
-								parsed_nodes.back()->addAttribute(key, val);
-							}
+					XMLNode* node = new XMLNode(node_name);
+					if(m_RootNode == nullptr) {
+						m_RootNode = node;
+						parsed_nodes.push_back(m_RootNode);
+					}
+					else {
+						parsed_nodes.back()->addChild(node);
+						parsed_nodes.push_back(node);
+					}
+
+					if(!attributes.empty()) {
+						auto attribute_map = split_attributes(attributes);
+						for(auto [key, val] : attribute_map) {
+							node->addAttribute(key, val);
 						}
 					}
 					i = close_tag_pos;
