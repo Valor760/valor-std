@@ -110,7 +110,7 @@ int main() {
 	// }
 
 	vlr::XMLParser parser("C:\\projects\\valor-std\\tests\\test.xml");
-	vlr::XMLNode* root = parser.getRoot();
+	auto root = parser.getRoot();
 
 	std::cout << root->getChild("second")->getChild("third")->getData() << "\n";
 

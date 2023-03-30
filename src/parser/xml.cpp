@@ -67,7 +67,7 @@ std::unordered_map<std::string, std::string> split_attributes(std::string str) {
 // 	return attributes;
 // }
 
-XMLNode* XMLParser::getRoot() {
+std::shared_ptr<XMLNode> XMLParser::getRoot() {
 	if(m_RootNode == nullptr) {
 		parseXML();
 		// try {
@@ -93,7 +93,7 @@ void XMLParser::parseXML() {
 	// Actual parsing
 	std::string line = "";
 	// std::vector<std::unique_ptr<XMLNode>> parsed_nodes = {};
-	std::vector<XMLNode*> parsed_nodes = {};
+	std::vector<std::shared_ptr<XMLNode>> parsed_nodes = {};
 	/*
 		FIXME: XML format allows for opening/closing bracket to be on different lines.
 		Eventually, I will come up to the method of reading the whole file into one line
@@ -153,15 +153,16 @@ void XMLParser::parseXML() {
 						throw std::runtime_error("ERROR: No node name was found!");
 					}
 
-					XMLNode* node = new XMLNode(node_name);
+					// std::shared_ptr<XMLNode> node = std::make_shared<XMLNode>(node_name);
+					std::shared_ptr<XMLNode> node = std::make_shared<XMLNode>(node_name);
 					if(m_RootNode == nullptr) {
 						m_RootNode = node;
-						parsed_nodes.push_back(m_RootNode);
 					}
 					else {
 						parsed_nodes.back()->addChild(node);
-						parsed_nodes.push_back(node);
+						// parsed_nodes.push_back(node);
 					}
+						parsed_nodes.emplace_back(node);
 
 					if(!attributes.empty()) {
 						auto attribute_map = split_attributes(attributes);
@@ -188,7 +189,7 @@ void XMLParser::parseXML() {
 *
 */
 
-void XMLNode::addChild(XMLNode* child) {
+void XMLNode::addChild(std::shared_ptr<XMLNode> child) {
 	m_Children.emplace_back(child);
 }
 
@@ -199,7 +200,7 @@ void XMLNode::addAttribute(const std::string& key, const std::string& value) {
 	m_NodeAttributes[key] = value;
 }
 
-XMLNode* XMLNode::getChild(const std::string& child_name) {
+std::shared_ptr<XMLNode>  XMLNode::getChild(const std::string& child_name) {
 	if(this == nullptr) {
 		return nullptr;
 	}
