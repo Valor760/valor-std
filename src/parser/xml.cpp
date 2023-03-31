@@ -25,12 +25,12 @@ std::unordered_map<std::string, std::string> split_attributes(std::string str) {
 			break;
 		}
 
-		std::string attr = str.substr(pos, eq_sign_pos - pos - 1);
+		std::string attr = str.substr(pos, eq_sign_pos - pos);
 		trim_str(attr);
 
 		size_t value_start_pos = str.find('\"', eq_sign_pos);
 		size_t value_end_pos   = str.find('\"', value_start_pos + 1);
-		std::string value      = str.substr(value_start_pos, value_end_pos - value_start_pos - 1);
+		std::string value      = str.substr(value_start_pos + 1, value_end_pos - value_start_pos - 1);
 		
 		attribute_map[attr] = value;
 
@@ -143,10 +143,13 @@ void XMLParser::parseXML() {
 					std::string tag_str = line.substr(i, close_tag_pos - i);
 					// FIXME: Is it necessary to trim?
 					trim_str(tag_str);
-					size_t node_name_end   = line.find_first_of(' ');
-					std::string node_name  = line.substr(i, node_name_end - i);
-					std::string attributes = line.substr(node_name_end, close_tag_pos - node_name_end);
-					trim_str(attributes);
+					size_t node_name_end   = tag_str.find_first_of(' ');
+					std::string node_name  = tag_str.substr(0, node_name_end - i + 1);
+					std::string attributes = "";
+					if(node_name_end != std::string::npos) {
+						attributes = tag_str.substr(node_name_end, close_tag_pos - node_name_end);
+						trim_str(attributes);
+					}
 
 					// No tags for current node
 					if(node_name.empty()) {
